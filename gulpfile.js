@@ -115,7 +115,12 @@ gulp.task(
 // Get Scripts
 gulp.task('scripts',async () => {
     gulp.src(['src/bootstrap/js/bootstrap.js', 'src/popper/popper.js','js/**/*.js'])
-      .pipe(minify())
+    .pipe(minify({
+        ext: {
+            min: '.min.js' // Set the file extension for minified files to just .js
+        },
+        noSource: true // Don’t output a copy of the source file
+    }))
       .pipe(gulp.dest('assets/js'))
 });
 
