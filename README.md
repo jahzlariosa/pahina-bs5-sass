@@ -39,7 +39,8 @@ gulp start
 ```
 # Todo
 - [ ] Add ImageMin
-- [ ] Convert to Paths *gulpfile.js* - Utilize *gulpconfig.json*
+- [ ] Make better demo page
+- [ ] Convert to paths *gulpfile.js* - Utilize *gulpconfig.json*
 - [ ] Optimize *gulpfile.js*
 
 ## License
