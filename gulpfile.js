@@ -11,6 +11,9 @@ const cleanCSS = require("gulp-clean-css");
 const size = require("gulp-size");
 const { on } = require("gulp");
 
+var cfg = require("./gulpconfig.json");
+var paths = cfg.paths;
+
 
 // Get Bootstrap Assets
 gulp.task("bs-scss", async () => {
@@ -129,10 +132,7 @@ gulp.task('scripts',async () => {
 gulp.task(
   "start",
   gulp.series("styles","scripts", function () {
-    browserSync.init({
-      server: "./",
-    });
-
+    browserSync.init( cfg.browserSyncOptions );
     gulp.watch("sass/**/*.scss", gulp.series("styles"));
     gulp.watch("src/**/*.js", gulp.series("scripts"));
     gulp.watch("js/**/*.js", gulp.series("scripts"));

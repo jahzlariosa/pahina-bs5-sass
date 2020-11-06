@@ -1,0 +1,7 @@
+  
+{
+	"browserSyncOptions": {
+        "server": "./",
+        "notify": true
+    }
+}
