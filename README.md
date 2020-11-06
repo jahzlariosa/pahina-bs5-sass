@@ -37,6 +37,11 @@ gulp start
 ```
 "proxy": "localhost:3000"
 ```
+# Todo
+- [ ] Add ImageMin
+- [ ] Convert to Paths *gulpfile.js* - Utilize *gulpconfig.json*
+- [ ] Optimize *gulpfile.js*
+
 ## License
 
 Pahina is licensed under GNU General Public License v3 - <https://opensource.org/licenses/GPL-3.0>
