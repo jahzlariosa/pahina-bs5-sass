@@ -23,7 +23,7 @@ npm install
 ```
 * Get the move the dependencies to the src folder
 ```
-gulp get-assets
+gulp get-src
 ```
 * Run the server and start coding
 ```
@@ -64,5 +64,3 @@ If this project helps you please consider to donate or **support the developer**
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?style=for-the-badge)](https://paypal.me/josephlariosa) [![Support](https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-green.svg?style=for-the-badge)](https://buymeacoff.ee/josephlariosa) [![Send](https://img.shields.io/badge/send-btc-yellow.svg?style=for-the-badge)](https://jahz.bitcoinwallet.com/)
 
 Crafted with :heart: and :coffee: by Joseph Lariosa | :philippines:
-
-
