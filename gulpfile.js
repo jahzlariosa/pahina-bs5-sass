@@ -10,6 +10,7 @@ const minify = require('gulp-minify');
 const cleanCSS = require("gulp-clean-css");
 const size = require("gulp-size");
 const { on } = require("gulp");
+const imagemin = require('gulp-imagemin');
 
 var cfg = require("./gulpconfig.json");
 var paths = cfg.paths;
@@ -128,6 +129,23 @@ gulp.task('scripts',async () => {
 });
 
 
+// Image Optimization
+gulp.task('imagemin', async () => {
+    gulp.src('src/images/*')
+    .pipe(imagemin([
+      imagemin.gifsicle({interlaced: true}),
+      imagemin.mozjpeg({quality: 75, progressive: true}),
+      imagemin.optipng({optimizationLevel: 5}),
+      imagemin.svgo({
+          plugins: [
+              {removeViewBox: true},
+              {cleanupIDs: false}
+          ]
+      })
+    ]))
+    .pipe(gulp.dest('assets/images'))
+});
+
 // Start Server & BrowserSync
 gulp.task(
   "start",
@@ -135,6 +153,7 @@ gulp.task(
     browserSync.init( cfg.browserSyncOptions );
     gulp.watch("sass/**/*.scss", gulp.series("styles"));
     gulp.watch("src/**/*.js", gulp.series("scripts"));
+    gulp.watch("src/images/*", gulp.series("imagemin"));
     gulp.watch("js/**/*.js", gulp.series("scripts"));
     gulp.watch("./*.html").on("change", browserSync.reload);
     gulp.watch("./*.php").on("change", browserSync.reload);
