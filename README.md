@@ -41,7 +41,7 @@ gulp start
 "proxy": "localhost:3000"
 ```
 # Todo
-- [ ] Add ImageMin
+- [x] Add ImageMin
 - [ ] Make better demo page
 - [ ] Convert to paths *gulpfile.js* - Utilize *gulpconfig.json*
 - [ ] Optimize *gulpfile.js*
