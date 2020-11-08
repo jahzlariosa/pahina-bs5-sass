@@ -1,3 +1,15 @@
+/************************************************************
+ * 
+/ Pahina Starter Template with SaSS
+/ Version: 1.0.1
+/ GitHub URI: https://github.com/jahzlariosa/pahina-bs5-sass
+/ Bootstrap Version: 5.0.0-alpha2
+/ Popper Version: 1.16.1
+/ Author: Joseph Lariosa
+/ Author URI: https://josephlariosa.com
+
+************************************************************/
+
 var gulp = require("gulp");
 var browserSync = require("browser-sync").create();
 var sass = require("gulp-sass");
@@ -9,56 +21,57 @@ const print = require("gulp-print").default;
 const minify = require('gulp-minify');
 const cleanCSS = require("gulp-clean-css");
 const size = require("gulp-size");
-const { on } = require("gulp");
 const imagemin = require('gulp-imagemin');
 
 var cfg = require("./gulpconfig.json");
 var paths = cfg.paths;
 
 
+
 // Get Bootstrap Assets
 gulp.task("bs-scss", async () => {
   gulp
-    .src("node_modules/bootstrap/scss/**/*")
-    .pipe(gulp.dest("src/bootstrap/scss"));
+    .src(paths.node + "/bootstrap/scss/**/*")
+    .pipe(gulp.dest(paths.dev + "/bootstrap/scss"));
 });
 
 gulp.task("bs-js", async () => {
   gulp
-    .src("node_modules/bootstrap/dist/js/**/*")
-    .pipe(gulp.dest("src/bootstrap/js"));
+    .src(paths.node + "/bootstrap/dist/js/**/*")
+    .pipe(gulp.dest(paths.dev + "/bootstrap/js"));
 });
 
 // Get Popper
 gulp.task("popper-js", async () => {
   gulp
-    .src("node_modules/popper.js/dist/popper.js")
-    .pipe(gulp.dest("src/popper/"));
+    .src(paths.node + "/popper.js/dist/popper.js")
+    .pipe(gulp.dest(paths.dev + "/popper/"));
 });
 
+// Follow the format above to add new dependencies and add to get-src
 // Get all dependencies to src
 gulp.task("get-src",
     gulp.series(gulp.series("bs-scss", "bs-js", "popper-js"))
 );
   
-
-// Processing Sass
+// Pre-Process
+// Processing Theme Sass
 gulp.task("sass", () => {
   return gulp
-    .src("./sass/theme.scss")
+    .src(paths.sass + paths.themeSass)
     .pipe(sass().on("error", sass.logError))
-    .pipe(gulp.dest("./assets/css"))
+    .pipe(gulp.dest(paths.assets + paths.css))
     .pipe(browserSync.stream());
 });
 
-// Generate SaSS with Source Maps
-gulp.task("sass-maps", () => {
+// Process all SaSS with Source Maps
+gulp.task("sass-all-maps", () => {
     return gulp
-      .src("./sass/**/*.scss")
+      .src(paths.sass + "/**/*.scss")
       .pipe(sourcemaps.init())
       .pipe(sass().on("error", sass.logError))
-      .pipe(sourcemaps.write("./maps"))
-      .pipe(gulp.dest("./assets/css"))
+      .pipe(sourcemaps.write(paths.maps))
+      .pipe(gulp.dest(paths.assets + paths.css))
       .pipe(browserSync.stream());
 });
   
@@ -66,7 +79,7 @@ gulp.task("sass-maps", () => {
 // Minify CSS
 gulp.task("minify-css", () => {
   return gulp
-    .src(["assets/css/*.css", "!assets/css/*.min.css"])
+    .src([paths.assets + paths.css + "/*.css", "!" + paths.assets + paths.css + "/*.min.css"]) // Excludes existing .min.css
     .pipe(
       cleanCSS({ debug: true }, (details) => {
         console.log(`${details.name}: Size: ${details.stats.originalSize}`);
@@ -80,34 +93,39 @@ gulp.task("minify-css", () => {
       })
     )
     .pipe(size())
-    .pipe(gulp.dest("assets/css/"))
+    .pipe(gulp.dest(paths.assets + paths.css))
 });
 
 
 // Cleaning
 // Remove css/custom
 gulp.task("clean-css", () => {
-    return gulp.src("assets/css/custom", { read: false }).pipe(clean());
+    return gulp.src(paths.assets + paths.css + paths.custom, { read: false }).pipe(clean());
   });
 
 // Delete generated assets
 gulp.task("delete-assets",() => {
-    return gulp.src("assets", { read: false }).pipe(clean());
+    return gulp.src(paths.assets, { read: false }).pipe(clean());
 });
 
 // Delete generated CSS
 gulp.task("delete-assets-css",() => {
-    return gulp.src("assets/css", { read: false }).pipe(clean());
+    return gulp.src(paths.assets + paths.css, { read: false }).pipe(clean());
 });
 
 // Delete generated JS
 gulp.task("delete-assets-js",() => {
-    return gulp.src("assets/js", { read: false }).pipe(clean());
+    return gulp.src(paths.assets + paths.js, { read: false }).pipe(clean());
 });
 
 // Delete Sources
+// Be very careful using this as you'll need to generate the correct tree to process all files again
+// Default tree
+// src
+// |-img
+// |-js
 gulp.task("delete-src",() => {
-    return gulp.src("src", { read: false }).pipe(clean());
+    return gulp.src(paths.dev, { read: false }).pipe(clean());
 });
 
 // Styles [Run sass -> minify-css -> clean-css]
@@ -118,20 +136,20 @@ gulp.task(
 
 // Get Scripts
 gulp.task('scripts',async () => {
-    gulp.src(['src/bootstrap/js/bootstrap.js', 'src/popper/popper.js','js/**/*.js'])
+    gulp.src(paths.dev + "/**/*.js")
     .pipe(minify({
         ext: {
-            min: '.min.js' // Set the file extension for minified files to just .js
+            min: '.min.js' // Set the file extension for minified files to .min.js
         },
         noSource: true // Don’t output a copy of the source file
     }))
-      .pipe(gulp.dest('assets/js'))
+      .pipe(gulp.dest(paths.assets + paths.js))
 });
 
 
 // Image Optimization
 gulp.task('imagemin', async () => {
-    gulp.src('src/images/*')
+    gulp.src(paths.imgsrc)
     .pipe(imagemin([
       imagemin.gifsicle({interlaced: true}),
       imagemin.mozjpeg({quality: 75, progressive: true}),
@@ -143,18 +161,17 @@ gulp.task('imagemin', async () => {
           ]
       })
     ]))
-    .pipe(gulp.dest('assets/images'))
+    .pipe(gulp.dest(paths.assets + paths.img))
 });
 
 // Start Server & BrowserSync
 gulp.task(
   "start",
-  gulp.series("styles","scripts", function () {
+  gulp.series("styles","scripts","imagemin", function () {
     browserSync.init( cfg.browserSyncOptions );
-    gulp.watch("sass/**/*.scss", gulp.series("styles"));
-    gulp.watch("src/**/*.js", gulp.series("scripts"));
-    gulp.watch("src/images/*", gulp.series("imagemin"));
-    gulp.watch("js/**/*.js", gulp.series("scripts"));
+    gulp.watch(paths.sass + "/**/*.scss", gulp.series("styles"));
+    gulp.watch(paths.dev + "/**/*.js", gulp.series("scripts"));
+    gulp.watch(paths.imgsrc, gulp.series("imagemin"));
     gulp.watch("./*.html").on("change", browserSync.reload);
     gulp.watch("./*.php").on("change", browserSync.reload);
   })

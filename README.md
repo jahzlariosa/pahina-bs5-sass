@@ -1,5 +1,5 @@
 # Pahina Template
-[Boostratap 5](https://v5.getbootstrap.com) Starter Template with SaSS
+[Boostratap 5](https://v5.getbootstrap.com) Starter Template with SaSS for easier front end development.
 
 # Demo
 [https://jahzlariosa.github.io/pahina-bs5-sass/](https://jahzlariosa.github.io/pahina-bs5-sass/)
@@ -42,9 +42,9 @@ gulp start
 ```
 # Todo
 - [x] Add ImageMin
+- [X] Convert to paths *gulpfile.js* - Utilize *gulpconfig.json*
+- [X] Optimize *gulpfile.js*
 - [ ] Make better demo page
-- [ ] Convert to paths *gulpfile.js* - Utilize *gulpconfig.json*
-- [ ] Optimize *gulpfile.js*
 
 ## License
 

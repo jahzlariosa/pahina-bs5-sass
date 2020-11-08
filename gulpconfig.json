@@ -1,7 +1,25 @@
   
+
 {
 	"browserSyncOptions": {
         "server": "./",
         "notify": true
-    }
+    },
+    "paths": {
+        "themeSass": "/theme.scss",
+		"js": "/js",
+        "css": "/css",
+        "img": "/img",
+        "maps": "/maps",
+        "custom": "/custom",
+        "sass": "./sass",
+		"imgsrc": "./src/img/**/*",
+		"node": "./node_modules",
+        "composer": "./vendor",
+        "base": "./",
+        "assets": "./assets",
+		"dev": "./src",
+		"dist": "./dist",
+		"distprod": "./dist-product" 
+	}
 }

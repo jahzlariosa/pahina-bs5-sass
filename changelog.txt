@@ -1,0 +1,11 @@
+Date: 08/11/2020 - Version: v1.0.1
+- Added Imagemin (command - gulp imagemin)
+- Defined paths to variables in gulpconfig.json
+- Gulpfile.js optimizations
+    --Clean up unused tasks
+    --Removed duplicates
+    --Utilized paths
+    --Moved js to src
+
+Date: 08/10/2020 - Version: v1.0.0
+- Initial Commit
