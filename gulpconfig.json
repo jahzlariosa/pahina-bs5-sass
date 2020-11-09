@@ -7,6 +7,12 @@
     },
     "paths": {
         "themeSass": "/theme.scss",
+        "themeCss": "/theme.css",
+        "themeCssMin": "/theme.min.css",
+        "themeJs": "/theme.js",
+        "themeJsMin": "/theme.min.js",
+        "bootstrap": "/bootstrap",
+        "popper": "/popper",
 		"js": "/js",
         "css": "/css",
         "img": "/img",
