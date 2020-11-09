@@ -1,4 +1,4 @@
-Date: 08/11/2020 - Version: v1.0.2
+Date: 10/11/2020 - Version: v1.0.2
 - New commands
     -- build-assets (Will generate the styling and scripts into assets/ with sourcemaps)
     -- build-prod (migrate all minfiles to dist/)
