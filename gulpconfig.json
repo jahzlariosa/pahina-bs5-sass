@@ -17,6 +17,7 @@
         "css": "/css",
         "img": "/img",
         "maps": "/maps",
+        "webfonts": "/webfonts",
         "custom": "/custom",
         "sass": "./sass",
 		"imgsrc": "./src/img/**/*",

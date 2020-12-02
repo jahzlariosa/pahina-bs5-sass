@@ -1,10 +1,9 @@
 /************************************************************
  * 
-/ Pahina Starter Template with SaSS
-/ Version: 1.0.1
-/ GitHub URI: https://github.com/jahzlariosa/pahina-bs5-sass
-/ Bootstrap Version: 5.0.0-alpha2
-/ Popper Version: 1.16.1
+/ Pahina Pahina WordPress Theme
+/ Version: 1.0.0
+/ GitHub URI: https://github.com/jahzlariosa/pahina-wp-theme
+/ Bootstrap Version: 5.0.0-alpha3
 / Author: Joseph Lariosa
 / Author URI: https://josephlariosa.com
 
@@ -13,7 +12,6 @@
 var gulp = require("gulp");
 var browserSync = require("browser-sync").create();
 var sass = require("gulp-sass");
-var sourcemaps = require("gulp-sourcemaps");
 var rename = require("gulp-rename");
 var clean = require("gulp-clean");
 var log = require("fancy-log");
@@ -34,29 +32,32 @@ gulp.task("bs-scss", async () => {
 
 gulp.task("bs-js", async () => {
   gulp
-    .src(paths.node + "/bootstrap/dist/js/**/*")
+    .src([paths.node + "/bootstrap/dist/js/bootstrap.js", paths.node + "/bootstrap/dist/js/bootstrap.bundle.js"]) 
     .pipe(gulp.dest(paths.dev + "/bootstrap/js"));
 });
 
-// Get Popper
-gulp.task("popper-js", async () => {
+gulp.task("get-fonts", async () => {
   gulp
-    .src(paths.node + "/popper.js/dist/popper.js")
-    .pipe(gulp.dest(paths.dev + "/popper/"));
+    .src([paths.node + "/@fortawesome/fontawesome-free/webfonts/*"]) 
+    .pipe(gulp.dest(paths.assets + paths.webfonts));
+});
+
+gulp.task("get-fonts-scss", async () => {
+  gulp
+    .src([paths.node + "/@fortawesome/fontawesome-free/scss/*"]) 
+    .pipe(gulp.dest(paths.dev + "/fontawesome"));
 });
 
 // Follow the format above to add new dependencies and add to get-src
 // Get all dependencies to src
-gulp.task("get-src", gulp.series(gulp.series("bs-scss", "bs-js", "popper-js")));
+gulp.task("get-src", gulp.series(gulp.series("bs-scss", "bs-js", "get-fonts", "get-fonts-scss")));
 
 // Pre-Process
 // Processing Theme Sass
 gulp.task("sass", () => {
   return gulp
-    .src(paths.sass + "/**/*.scss")
-    .pipe(sourcemaps.init())
+    .src(paths.sass + "/*.scss")
     .pipe(sass().on("error", sass.logError))
-    .pipe(sourcemaps.write(paths.maps))
     .pipe(gulp.dest(paths.assets + paths.css))
     .pipe(browserSync.stream());
 });
@@ -98,6 +99,9 @@ gulp.task("delete-assets", () => {
   return gulp.src(paths.assets, { read: false }).pipe(clean());
 });
 
+gulp.task("delete-node", () => {
+  return gulp.src(paths.node, { read: false }).pipe(clean());
+});
 // Delete generated CSS
 gulp.task("reset-assets-css", () => {
   return gulp.src(paths.assets + paths.css, { read: false }).pipe(clean());
@@ -114,14 +118,14 @@ gulp.task("reset-assets-img", () => {
 });
 
 // Delete Sources
-// Be very careful using this as you'll need to generate the correct tree to process all files again
-// Default tree
-// src
-// |-img
-// |-js
 gulp.task("delete-src", () => {
   return gulp.src(paths.dev, { read: false }).pipe(clean());
 });
+
+gulp.task("delete-src-bs", () => {
+  return gulp.src(paths.dev + "/bootstrap", { read: false }).pipe(clean());
+});
+
 
 // Delete dist
 gulp.task("delete-dist", () => {
@@ -129,14 +133,12 @@ gulp.task("delete-dist", () => {
 });
 
 // Styles [Run sass -> minify-css -> clean-css]
-gulp.task("styles", gulp.series(gulp.series("sass", "minify-css")));
+gulp.task("styles", gulp.series(gulp.series("sass", "minify-css", "get-fonts", "get-fonts-scss")));
 
 // Get Scripts
 gulp.task("scripts", async () => {
   gulp
-    .src(paths.dev + "/**/*.js")
-    .pipe(sourcemaps.init())
-    .pipe(sourcemaps.write(paths.maps))
+    .src([paths.dev + "/bootstrap/js/bootstrap.js","./js/**/*.js", paths.dev + "/bootstrap/js/bootstrap.bundle.js"])
     .pipe(
       minify({
         ext: {
@@ -168,7 +170,7 @@ gulp.task("imagemin", async () => {
 // Build
 gulp.task(
   "build-assets",
-  gulp.series(gulp.series("sass", "minify-css", "scripts", "imagemin"))
+  gulp.series(gulp.series("styles", "scripts", "imagemin"))
 );
 
 gulp.task(
@@ -185,7 +187,6 @@ gulp.task(
         .src([
           paths.assets + paths.js + "/theme.*",
           paths.assets + paths.js + paths.bootstrap + "/js/bootstrap.min.js",
-          paths.assets + paths.js + paths.popper + "/popper.min.js",
         ])
         .pipe(gulp.dest(paths.dist + paths.js));
       gulp
@@ -204,9 +205,19 @@ gulp.task(
     browserSync.init(cfg.browserSyncOptions);
     gulp.watch(paths.sass + "/**/*.scss", gulp.series("styles"));
     gulp.watch(paths.dev + "/**/*.js", gulp.series("scripts"));
+    gulp.watch("." + paths.js + "/*.js", gulp.series("scripts"));
     gulp.watch(paths.imgsrc, gulp.series("imagemin"));
     gulp.watch("./*.html").on("change", browserSync.reload);
     gulp.watch("./*.php").on("change", browserSync.reload);
+  })
+);
+
+gulp.task(
+  "watch",
+  gulp.series("styles", "scripts", function () {
+    gulp.watch(paths.sass + "/**/*.scss", gulp.series("styles"));
+    gulp.watch(paths.dev + "/**/*.js", gulp.series("scripts"));
+    gulp.watch("." + paths.js + "/*.js", gulp.series("scripts"));
   })
 );
 
